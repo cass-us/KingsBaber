@@ -5,10 +5,10 @@ const Navbar = ({ onOpenBooking }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { name: "Services", href: "#services" },
-    { name: "Barbers", href: "#barbers" },
-    { name: "About", href: "#about" },
-    { name: "Contact", href: "#contact" },
+    // { name: "Services", href: "#services" },
+   
+    // { name: "About", href: "#about" },
+    // { name: "Contact", href: "#contact" },
   ];
 
   return (

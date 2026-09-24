@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import Navbar from "./components/Navbar";
+//import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Services from "./components/Services";
+import About from "./components/About";
 import BookingModal from "./components/BookingModal";
 
 export default function App() {
@@ -38,11 +39,18 @@ export default function App() {
         onSelectService={handleSelectService}
       />
 
+
+       <About />
+
+
       {/* Services Section */}
       <Services
         onOpenBooking={handleOpenBooking}
         onSelectService={handleSelectService}
       />
+
+      {/* About Section */}
+      
 
       {/* Interactive Booking Modal Overlay */}
       <BookingModal

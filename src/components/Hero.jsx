@@ -70,7 +70,7 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
 
   return (
     <section ref={containerRef} className="relative isolate min-h-screen overflow-hidden bg-zinc-950 px-6 py-20 sm:px-8 lg:px-12">
-      {/* --- ORIGINAL BACKGROUND RESTORED --- */}
+      {/* Background Image & Overlays */}
       <div className="absolute inset-0 -z-10">
         <img
           src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -116,22 +116,22 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
               treatments.
             </p>
 
-            {/* Call-to-action Buttons */}
+            {/* Call-to-action Buttons - Reduced padding & font sizes for sm and md screens */}
             <div className="gsap-buttons flex flex-col items-center justify-center gap-3.5 pt-2 sm:flex-row md:justify-start">
               <button
                 type="button"
                 onClick={handleBookNow}
-                className="group flex w-full items-center justify-center gap-2.5 rounded-xl bg-white px-7 py-3.5 text-sm font-bold tracking-wide text-zinc-950 shadow-xl transition-all duration-300 hover:bg-zinc-200 hover:scale-[1.02] sm:w-auto"
+                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-2.5 text-xs font-bold tracking-wide text-zinc-950 shadow-xl transition-all duration-300 hover:bg-zinc-200 hover:scale-[1.02] sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-7 lg:py-3.5 lg:text-sm"
               >
                 <span>Book Appointment</span>
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1 lg:h-4 lg:w-4" />
               </button>
 
               <a
                 href="#services"
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700/80 bg-zinc-900/60 px-7 py-3.5 text-center text-sm font-medium tracking-wide text-zinc-200 backdrop-blur-md transition-all duration-300 hover:border-zinc-500 hover:bg-zinc-800/80 sm:w-auto"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700/80 bg-zinc-900/60 px-5 py-2.5 text-center text-xs font-medium tracking-wide text-zinc-200 backdrop-blur-md transition-all duration-300 hover:border-zinc-500 hover:bg-zinc-800/80 sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-7 lg:py-3.5 lg:text-sm"
               >
-                <Scissors className="h-4 w-4 text-zinc-400" />
+                <Scissors className="h-3.5 w-3.5 text-zinc-400 lg:h-4 lg:w-4" />
                 <span>Explore Services</span>
               </a>
             </div>
@@ -240,7 +240,7 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
               <button
                 type="button"
                 onClick={handleBookNow}
-                className="w-full rounded-xl bg-emerald-500 py-3.5 text-xs font-bold uppercase tracking-wider text-zinc-950 transition-all duration-300 hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20"
+                className="w-full rounded-xl bg-emerald-500 py-2.5 text-xs font-bold uppercase tracking-wider text-zinc-950 transition-all duration-300 hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20 lg:py-3.5"
               >
                 Reserve Your Chair
               </button>
