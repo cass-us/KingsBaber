@@ -7,53 +7,50 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Create a smooth staggering entrance sequence
-      gsap.from(".gsap-badge", {
-        y: -20,
+      // 1. Staggered Entrance Timeline
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      tl.from(".gsap-badge", {
+        y: -30,
         opacity: 0,
         duration: 0.8,
-        ease: "power3.out",
-      });
-
-      gsap.from(".gsap-title", {
-        y: 30,
+      })
+      .from(".gsap-title", {
+        y: 40,
         opacity: 0,
         duration: 1,
-        delay: 0.2,
-        ease: "power3.out",
-      });
-
-      gsap.from(".gsap-desc", {
+      }, "-=0.4")
+      .from(".gsap-desc", {
+        y: 25,
+        opacity: 0,
+        duration: 0.8,
+      }, "-=0.6")
+      .from(".gsap-buttons", {
         y: 20,
         opacity: 0,
         duration: 0.8,
-        delay: 0.4,
-        ease: "power3.out",
+      }, "-=0.5")
+      .from(".gsap-stats", {
+        scale: 0.9,
+        opacity: 0,
+        duration: 0.9,
+      }, "-=0.6")
+      .from(".gsap-card", {
+        x: 50,
+        opacity: 0,
+        duration: 1.1,
+        ease: "power4.out",
+      }, "-=0.8");
+
+      // 2. Continuous Subtle Floating Animation for the Glass Card
+      gsap.to(".gsap-card", {
+        y: -10,
+        duration: 4,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
       });
 
-      gsap.from(".gsap-buttons", {
-        y: 20,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.5,
-        ease: "power3.out",
-      });
-
-      gsap.from(".gsap-stats", {
-        scale: 0.95,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.6,
-        ease: "power3.out",
-      });
-
-      gsap.from(".gsap-card", {
-        x: 40,
-        opacity: 0,
-        duration: 1,
-        delay: 0.3,
-        ease: "power3.out",
-      });
     }, containerRef);
 
     return () => ctx.revert();
@@ -61,7 +58,7 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
 
   const handleBookNow = () => {
     if (onSelectService) {
-      onSelectService({ id: "classic-cut", title: "The Classic Cut", price: "$45" });
+      onSelectService({ id: "classic-cut", title: "The Classic Cut", price: "R145" });
     }
     if (onOpenBooking) {
       onOpenBooking();
@@ -70,17 +67,22 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
 
   return (
     <section ref={containerRef} className="relative isolate min-h-screen overflow-hidden bg-zinc-950 px-6 py-20 sm:px-8 lg:px-12">
-      {/* Background Image & Overlays */}
+      {/* Background Image & Cinematic Dark Overlays */}
       <div className="absolute inset-0 -z-10">
         <img
           src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Kings Barber Shop Interior"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover scale-105 animate-pulse duration-[10000ms]"
         />
 
-        <div className="absolute inset-0 bg-zinc-950/60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-zinc-950/30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/40 to-zinc-950/90" />
+        {/* Deep Dark Vignettes & Gradients */}
+        <div className="absolute inset-0 bg-zinc-950/75" />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-zinc-950/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/95 via-zinc-950/60 to-zinc-950/40" />
+
+        {/* Subtle Ambient Glows */}
+        <div className="absolute top-1/3 left-1/4 -z-10 h-96 w-96 rounded-full bg-amber-500/10 blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 -z-10 h-96 w-96 rounded-full bg-emerald-500/10 blur-[140px] pointer-events-none" />
       </div>
 
       {/* Content Area */}
@@ -100,7 +102,7 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
             <h1 className="gsap-title font-serif text-4xl font-light tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl">
               Precision Cuts.
               <br />
-              <span className="font-sans font-black uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-zinc-400">
+              <span className="font-sans font-black uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-amber-400">
                 Timeless Style.
               </span>
             </h1>
@@ -111,17 +113,15 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
               <span className="font-semibold text-white tracking-wide">
                 Kings Barber
               </span>
-              . Where classic barbering techniques meet modern luxury.
-              Experience top-tier fades, beard sculpts, and premium hot towel
-              treatments.
+              . Where classic barbering techniques meet modern luxury. Experience top-tier fades, beard sculpts, and premium hot towel treatments.
             </p>
 
-            {/* Call-to-action Buttons - Reduced padding & font sizes for sm and md screens */}
+            {/* Call-to-action Buttons */}
             <div className="gsap-buttons flex flex-col items-center justify-center gap-3.5 pt-2 sm:flex-row md:justify-start">
               <button
                 type="button"
                 onClick={handleBookNow}
-                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-2.5 text-xs font-bold tracking-wide text-zinc-950 shadow-xl transition-all duration-300 hover:bg-zinc-200 hover:scale-[1.02] sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-7 lg:py-3.5 lg:text-sm"
+                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-5 py-2.5 text-xs font-bold tracking-wide text-zinc-950 shadow-xl shadow-amber-500/20 transition-all duration-300 hover:bg-amber-400 hover:scale-[1.02] sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-7 lg:py-3.5 lg:text-sm"
               >
                 <span>Book Appointment</span>
                 <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1 lg:h-4 lg:w-4" />
@@ -140,7 +140,7 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
             <div className="gsap-stats mx-auto grid max-w-xl grid-cols-3 gap-4 border-t border-zinc-800/80 pt-6 md:mx-0">
               <div>
                 <p className="flex items-center justify-center gap-1 text-xl font-bold text-white sm:justify-start sm:text-2xl">
-                  4.9 <Star className="h-4 w-4 fill-emerald-400 text-emerald-400" />
+                  4.9 <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
                 </p>
                 <p className="mt-1 text-[11px] uppercase tracking-wider font-medium text-zinc-400">
                   Client Rating
@@ -167,9 +167,9 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
             </div>
           </div>
 
-          {/* Right Column: Shop Details Glass Card */}
+          {/* Right Column: Dark Glassmorphic Shop Details Card */}
           <div className="hidden md:col-span-4 md:block">
-            <div className="gsap-card rounded-2xl border border-zinc-800/90 bg-zinc-950/80 p-6 shadow-2xl backdrop-blur-xl">
+            <div className="gsap-card rounded-2xl border border-zinc-800/90 bg-zinc-950/85 p-6 shadow-2xl shadow-black/80 backdrop-blur-xl">
 
               <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-200">
@@ -185,8 +185,8 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
               <div className="space-y-5 py-5 text-xs sm:text-sm">
 
                 <div className="flex items-start gap-3.5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-300">
-                    <Clock className="h-4 w-4" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-300 shadow-inner">
+                    <Clock className="h-4 w-4 text-amber-400" />
                   </div>
 
                   <div>
@@ -203,8 +203,8 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
                 </div>
 
                 <div className="flex items-start gap-3.5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-300">
-                    <MapPin className="h-4 w-4" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-300 shadow-inner">
+                    <MapPin className="h-4 w-4 text-amber-400" />
                   </div>
 
                   <div>
@@ -221,8 +221,8 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
                 </div>
 
                 <div className="flex items-start gap-3.5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-300">
-                    <Scissors className="h-4 w-4" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-300 shadow-inner">
+                    <Scissors className="h-4 w-4 text-amber-400" />
                   </div>
 
                   <div>
@@ -251,7 +251,7 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
         </div>
       </div>
 
-      {/* Bottom Fade */}
+      {/* Bottom Fade Transition */}
       <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-zinc-950 to-transparent pointer-events-none" />
     </section>
   );

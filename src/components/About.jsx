@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Award, Scissors, Users, Sparkles, CheckCircle } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const barbers = [
   {
@@ -10,7 +13,7 @@ const barbers = [
     role: 'Master Barber & Founder',
     experience: '12+ Years Experience',
     specialty: 'Precision Fades & Hot Towel Shaves',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80', // photo-SoVpY7e4D5A
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
     bio: 'Crafting sharp looks and timeless cuts since day one. Dedicated to perfection with every blade stroke.',
   },
   {
@@ -18,7 +21,7 @@ const barbers = [
     role: 'Senior Hair Stylist',
     experience: '8 Years Experience',
     specialty: 'Modern Texturized Cuts & Beard Sculpting',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80', // photo-2EGNqazbAMk
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
     bio: 'Combining modern styling trends with classic barbering techniques for effortless everyday looks.',
   },
   {
@@ -26,7 +29,7 @@ const barbers = [
     role: 'Beard & Detail Specialist',
     experience: '6 Years Experience',
     specialty: 'Beard Grooming, Line-ups & Hair Art',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80', // photo-L10hUomGyO0
+    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80',
     bio: 'Specializing in intricate lineup detailing and custom beard care to elevate your personal style.',
   },
 ];
@@ -36,49 +39,43 @@ function About() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Fade-in and Up Hero Elements
-      gsap.from('.about-hero > *', {
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        stagger: 0.2,
-        ease: 'power3.out',
-      });
-
-      // 2. Scroll Triggered Animation for Story and Showroom Image
+      // 1. Scroll Triggered Animation for Story and Showroom Image
       gsap.from('.about-story-text', {
         scrollTrigger: {
           trigger: '.about-story-section',
           start: 'top 80%',
+          toggleActions: 'play none none none',
         },
         opacity: 0,
         x: -50,
         duration: 1,
-        ease: 'power2.out',
+        ease: 'power3.out',
       });
 
       gsap.from('.about-story-img', {
         scrollTrigger: {
           trigger: '.about-story-section',
           start: 'top 80%',
+          toggleActions: 'play none none none',
         },
         opacity: 0,
         x: 50,
         duration: 1.2,
-        ease: 'power2.out',
+        ease: 'power3.out',
       });
 
-      // 3. Scroll Triggered Cards Reveal
+      // 2. Scroll Triggered Cards Reveal with a staggered spring effect
       gsap.from('.barber-card', {
         scrollTrigger: {
           trigger: '.barbers-grid',
-          start: 'top 85%',
+          start: 'top 82%',
+          toggleActions: 'play none none none',
         },
         opacity: 0,
         y: 60,
         duration: 1,
-        stagger: 0.25,
-        ease: 'back.out(1.2)',
+        stagger: 0.2,
+        ease: 'back.out(1.1)',
       });
     }, containerRef);
 
@@ -86,69 +83,82 @@ function About() {
   }, []);
 
   return (
-    <div
+    <section
       ref={containerRef}
-      className="bg-zinc-950 text-zinc-100 min-h-screen py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden font-sans"
+      id="about"
+      className="bg-white text-zinc-900 min-h-screen py-24 px-6 sm:px-8 lg:px-12 relative overflow-hidden font-sans border-t border-slate-100"
     >
-      {/* Background Accent Glows */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/5 rounded-full filter blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full filter blur-[100px] pointer-events-none" />
-
-      {/* Hero Header */}
-      <div className="about-hero max-w-4xl mx-auto text-center mb-24 relative z-10">
-        {/* <h2 className="text-amber-500 text-sm font-bold tracking-widest uppercase mb-3">
-          Welcome to KingsBaber
-        </h2>
-        <h1 className="text-5xl sm:text-6xl font-extrabold text-white tracking-tight mb-8">
-          Where Craftsmanship Meets Comfort
-        </h1>
-        <p className="text-zinc-400 text-lg leading-relaxed max-w-2xl mx-auto">
-          More than just a haircut—KingsBaber is a sanctuary for refinement, precision, and community. We preserve traditional barbering traditions while embracing modern grooming aesthetic standards.
-        </p> */}
-      </div>
+      {/* Background Creative Ambient Accents */}
+      <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-amber-500/5 rounded-full filter blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/3 right-10 w-[400px] h-[400px] bg-emerald-500/5 rounded-full filter blur-[120px] pointer-events-none" />
 
       {/* Shop Story & Interior Preview */}
-      <div className="about-story-section max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-28 relative z-10">
-        <div className="about-story-text space-y-6">
-          <h3 className="text-3xl font-bold text-white tracking-tight">Our Heritage & Promise</h3>
-          <p className="text-zinc-300 leading-relaxed text-base">
-            Founded with a passion for uncompromised grooming quality, KingsBaber delivers tailored cuts and premium beard care in a relaxed, classic barbershop setting.
+      <div className="about-story-section max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center mb-28 relative z-10">
+        
+        {/* Left Story Text */}
+        <div className="about-story-text space-y-6 lg:col-span-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+            <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+            Our Heritage & Promise
+          </div>
+
+          <h2 className="font-serif text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl lg:text-5xl">
+            Where Craftsmanship Meets Modern Luxury
+          </h2>
+
+          <p className="text-zinc-600 leading-relaxed text-base font-light">
+            Founded with a passion for uncompromised grooming quality, Kings Barber delivers tailored cuts and premium beard care in a relaxed, sophisticated setting.
           </p>
-          <p className="text-zinc-400 leading-relaxed text-base">
-            Every appointment begins with a detailed consultation to understand your hair texture, head shape, and personal routine, ensuring you walk out looking and feeling confident.
+
+          <p className="text-zinc-600 leading-relaxed text-base font-light">
+            Every appointment begins with a detailed consultation to understand your hair texture, face shape, and personal routine, ensuring you walk out looking and feeling extraordinary.
           </p>
-          <div className="grid grid-cols-3 gap-6 pt-6 border-t border-zinc-800 text-center">
-            <div>
-              <p className="text-4xl font-extrabold text-amber-500">10k+</p>
-              <p className="text-xs text-zinc-400 uppercase tracking-wider mt-1.5 font-semibold">Cuts Delivered</p>
+
+          <div className="grid grid-cols-3 gap-6 pt-6 border-t border-slate-200 text-center">
+            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 shadow-sm">
+              <p className="text-3xl font-black text-amber-600">10k+</p>
+              <p className="text-[11px] text-zinc-500 uppercase tracking-wider mt-1 font-semibold">Cuts Delivered</p>
             </div>
-            <div>
-              <p className="text-4xl font-extrabold text-amber-500">15+</p>
-              <p className="text-xs text-zinc-400 uppercase tracking-wider mt-1.5 font-semibold">Awards Won</p>
+            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 shadow-sm">
+              <p className="text-3xl font-black text-amber-600">15+</p>
+              <p className="text-[11px] text-zinc-500 uppercase tracking-wider mt-1 font-semibold">Awards Won</p>
             </div>
-            <div>
-              <p className="text-4xl font-extrabold text-amber-500">4.9★</p>
-              <p className="text-xs text-zinc-400 uppercase tracking-wider mt-1.5 font-semibold">Client Rating</p>
+            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 shadow-sm">
+              <p className="text-3xl font-black text-amber-600">4.9★</p>
+              <p className="text-[11px] text-zinc-500 uppercase tracking-wider mt-1 font-semibold">Client Rating</p>
             </div>
           </div>
         </div>
 
-        <div className="about-story-img rounded-2xl overflow-hidden shadow-2xl border border-zinc-800 relative group min-h-[384px] bg-zinc-900">
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-40 z-10" />
+        {/* Right Showroom Image Showcase */}
+        <div className="about-story-img rounded-3xl overflow-hidden shadow-2xl shadow-slate-200/60 border border-slate-200 relative group min-h-[420px] bg-slate-100 lg:col-span-6">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-50 z-10" />
           <img
             src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=1000&q=80"
-            alt="KingsBaber Shop Interior"
-            className="w-full h-96 object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+            alt="Kings Barber Shop Interior"
+            className="w-full h-[450px] object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
           />
+          <div className="absolute bottom-6 left-6 right-6 z-20 flex items-center justify-between rounded-2xl bg-white/90 backdrop-blur-md px-5 py-3.5 border border-white/20 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+                <CheckCircle className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-zinc-900 uppercase tracking-wider">State of the Art</p>
+                <p className="text-[11px] text-zinc-500">Equipped for ultimate comfort</p>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
 
       {/* Meet the Barbers Team Section */}
-      <div className="max-w-6xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-white mb-4 tracking-tight">Meet Our Master Barbers</h2>
-          <p className="text-zinc-400 max-w-xl mx-auto text-base">
-            Our skilled team of artists brings years of dedication, precision techniques, and passion to every chair.
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-zinc-900 tracking-tight">Meet Our Master Barbers</h2>
+          <p className="text-zinc-600 text-sm sm:text-base font-light">
+            Our skilled team of artists brings years of dedication, precision techniques, and passion to every single chair.
           </p>
         </div>
 
@@ -156,35 +166,37 @@ function About() {
           {barbers.map((barber, index) => (
             <div
               key={index}
-              className="barber-card bg-zinc-900 border border-zinc-800/80 rounded-2xl overflow-hidden hover:border-amber-500/40 transition-all duration-300 flex flex-col group shadow-lg hover:shadow-amber-500/5"
+              className="barber-card bg-white border border-slate-200 rounded-3xl overflow-hidden hover:border-amber-400 hover:shadow-xl hover:shadow-amber-500/5 transition-all duration-300 flex flex-col group shadow-md"
             >
-              <div className="h-72 overflow-hidden relative bg-zinc-800">
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent opacity-80 z-10 pointer-events-none" />
+              <div className="h-80 overflow-hidden relative bg-slate-100">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-70 z-10 pointer-events-none" />
                 <img
                   src={barber.image}
                   alt={barber.name}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                  className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
                 />
-                <span className="absolute bottom-4 left-4 bg-amber-500 text-zinc-950 text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-md z-20 shadow-md">
+                <span className="absolute bottom-4 left-4 bg-amber-500 text-white text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full z-20 shadow-md">
                   {barber.experience}
                 </span>
               </div>
-              <div className="p-7 flex-1 flex flex-col justify-between relative z-20">
-                <div>
-                  <h3 className="text-2xl font-bold text-white group-hover:text-amber-500 transition-colors duration-200">
+
+              <div className="p-7 flex-1 flex flex-col justify-between relative z-20 space-y-4">
+                <div className="space-y-2">
+                  <h3 className="font-serif text-xl font-bold text-zinc-900 group-hover:text-amber-600 transition-colors duration-200">
                     {barber.name}
                   </h3>
-                  <p className="text-amber-500 text-sm font-semibold mb-4 tracking-wide uppercase">
+                  <p className="text-amber-600 text-xs font-semibold tracking-wider uppercase">
                     {barber.role}
                   </p>
-                  <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                  <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed font-light pt-2">
                     {barber.bio}
                   </p>
                 </div>
-                <div className="pt-4 border-t border-zinc-800/65 text-xs text-zinc-400 flex items-center justify-between">
+
+                <div className="pt-4 border-t border-slate-100 text-xs text-slate-700 flex items-center justify-between">
                   <div>
-                    <span className="font-semibold text-zinc-300 block mb-0.5">Specialty</span>
-                    {barber.specialty}
+                    <span className="font-semibold text-zinc-900 block mb-0.5 text-[11px] uppercase tracking-wider">Specialty</span>
+                    <span className="font-light text-zinc-600">{barber.specialty}</span>
                   </div>
                 </div>
               </div>
@@ -192,7 +204,7 @@ function About() {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

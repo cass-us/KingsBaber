@@ -101,8 +101,8 @@ const Services = ({ onOpenBooking, onSelectService }) => {
     gsap.to(cardsRef.current[index], {
       y: -8,
       scale: 1.02,
-      borderColor: servicesList[index].highlighted ? "#f59e0b" : "#4b5563",
-      boxShadow: "0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 30px -5px rgba(245, 158, 11, 0.15)",
+      borderColor: servicesList[index].highlighted ? "#d97706" : "#cbd5e1",
+      boxShadow: "0 20px 40px -15px rgba(0, 0, 0, 0.1), 0 0 30px -5px rgba(217, 119, 6, 0.1)",
       duration: 0.4,
       ease: "power2.out",
     });
@@ -118,10 +118,10 @@ const Services = ({ onOpenBooking, onSelectService }) => {
     gsap.to(cardsRef.current[index], {
       y: 0,
       scale: 1,
-      borderColor: servicesList[index].highlighted ? "#f59e0b" : "#27272a",
+      borderColor: servicesList[index].highlighted ? "#f59e0b" : "#e2e8f0",
       boxShadow: servicesList[index].highlighted 
-        ? "0 10px 15px -3px rgba(245, 158, 11, 0.08)" 
-        : "none",
+        ? "0 10px 25px -3px rgba(245, 158, 11, 0.12)" 
+        : "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
       duration: 0.4,
       ease: "power2.out",
     });
@@ -137,7 +137,7 @@ const Services = ({ onOpenBooking, onSelectService }) => {
     <section 
       ref={containerRef}
       id="services" 
-      className="relative bg-zinc-950 px-6 py-24 sm:px-8 lg:px-12 border-t border-zinc-900"
+      className="relative bg-white px-6 py-24 sm:px-8 lg:px-12 border-t border-zinc-100"
     >
       {/* Dynamic Background Blurs */}
       <div className="absolute inset-x-0 top-0 -z-10 h-[500px] bg-gradient-to-b from-amber-500/5 to-transparent pointer-events-none" />
@@ -147,14 +147,14 @@ const Services = ({ onOpenBooking, onSelectService }) => {
         
         {/* Header */}
         <div className="gsap-services-header text-center space-y-4 mb-16 md:mb-20">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400 backdrop-blur-md">
-            <Scissors className="h-3.5 w-3.5 text-emerald-400 animate-spin-slow" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 backdrop-blur-md">
+            <Scissors className="h-3.5 w-3.5 text-emerald-600" />
             Our Craft
           </div>
-          <h2 className="font-serif text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+          <h2 className="font-serif text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl lg:text-6xl">
             Signature Services
           </h2>
-          <p className="mx-auto max-w-xl text-sm leading-7 text-zinc-400 font-light">
+          <p className="mx-auto max-w-xl text-sm leading-7 text-zinc-600 font-light">
             Expertly crafted cuts, detailed beard sculpting, and luxury treatments designed to keep you looking and feeling your absolute best.
           </p>
         </div>
@@ -167,15 +167,15 @@ const Services = ({ onOpenBooking, onSelectService }) => {
               ref={(el) => (cardsRef.current[index] = el)}
               onMouseEnter={() => handleCardMouseEnter(index)}
               onMouseLeave={() => handleCardMouseLeave(index)}
-              className={`relative flex flex-col justify-between overflow-hidden rounded-3xl border bg-zinc-900/30 transition-shadow duration-300 ${
+              className={`relative flex flex-col justify-between overflow-hidden rounded-3xl border bg-white shadow-md transition-shadow duration-300 ${
                 service.highlighted
-                  ? "border-amber-500/80 shadow-lg shadow-amber-500/5 ring-1 ring-amber-500/20"
-                  : "border-zinc-800"
+                  ? "border-amber-400 shadow-xl shadow-amber-500/10 ring-1 ring-amber-400/20"
+                  : "border-slate-200"
               }`}
             >
               {service.badge && (
-                <span className="absolute top-4 right-4 z-20 rounded-full bg-amber-500 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-zinc-950 shadow-lg flex items-center gap-1">
-                  <Sparkles className="h-3 w-3 fill-zinc-950" />
+                <span className="absolute top-4 right-4 z-25 rounded-full bg-amber-500 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-md flex items-center gap-1">
+                  <Sparkles className="h-3 w-3 fill-white" />
                   {service.badge}
                 </span>
               )}
@@ -190,10 +190,10 @@ const Services = ({ onOpenBooking, onSelectService }) => {
                     loading="lazy"
                   />
                   {/* Subtle vignette layer overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/90 via-zinc-900/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   
-                  <span className="absolute bottom-4 left-4 rounded-xl bg-zinc-950/80 border border-zinc-800 px-2.5 py-1 text-[11px] font-medium text-zinc-300 backdrop-blur-sm flex items-center gap-1.5">
-                    <Clock className="h-3 w-3 text-zinc-400" />
+                  <span className="absolute bottom-4 left-4 rounded-xl bg-white/90 border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-700 backdrop-blur-sm flex items-center gap-1.5 shadow-sm">
+                    <Clock className="h-3 w-3 text-slate-500" />
                     {service.duration}
                   </span>
                 </div>
@@ -201,23 +201,23 @@ const Services = ({ onOpenBooking, onSelectService }) => {
                 {/* Info Container */}
                 <div className="px-6 pb-2 space-y-4">
                   <div className="flex items-start justify-between gap-3">
-                    <h3 className="font-serif text-lg font-semibold text-white leading-snug">
+                    <h3 className="font-serif text-lg font-semibold text-zinc-900 leading-snug">
                       {service.title}
                     </h3>
-                    <span className="text-2xl font-black text-white shrink-0 tracking-tight">
+                    <span className="text-2xl font-black text-zinc-900 shrink-0 tracking-tight">
                       {service.price}
                     </span>
                   </div>
 
-                  <p className="text-xs leading-relaxed text-zinc-400 font-light">
+                  <p className="text-xs leading-relaxed text-zinc-600 font-light">
                     {service.description}
                   </p>
 
                   {/* Features List */}
-                  <ul className="space-y-2.5 pt-4 border-t border-zinc-800/80">
+                  <ul className="space-y-2.5 pt-4 border-t border-slate-100">
                     {service.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center gap-2.5 text-xs text-zinc-300">
-                        <Check className="text-emerald-400 h-3.5 w-3.5 shrink-0" />
+                      <li key={idx} className="flex items-center gap-2.5 text-xs text-slate-700">
+                        <Check className="text-emerald-600 h-3.5 w-3.5 shrink-0" />
                         <span className="truncate font-light">{feature}</span>
                       </li>
                     ))}
@@ -226,14 +226,14 @@ const Services = ({ onOpenBooking, onSelectService }) => {
               </div>
 
               {/* Actions */}
-              <div className="px-6 pb-6 pt-4 mt-auto border-t border-zinc-800/85 space-y-2.5">
+              <div className="px-6 pb-6 pt-4 mt-auto border-t border-slate-100 space-y-2.5">
                 <button
                   type="button"
                   onClick={() => handleBookService(service)}
                   className={`group relative flex w-full items-center justify-center gap-1.5 rounded-xl py-3 text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
                     service.highlighted
-                      ? "bg-amber-500 text-zinc-950 hover:bg-amber-400 hover:scale-[1.01]"
-                      : "bg-white text-zinc-950 hover:bg-zinc-200 hover:scale-[1.01]"
+                      ? "bg-amber-500 text-white hover:bg-amber-600 hover:scale-[1.01]"
+                      : "bg-zinc-900 text-white hover:bg-zinc-800 hover:scale-[1.01]"
                   }`}
                 >
                   <UserCheck className="h-3.5 w-3.5" />
@@ -243,7 +243,7 @@ const Services = ({ onOpenBooking, onSelectService }) => {
                 <button
                   type="button"
                   onClick={() => onSelectService(service)}
-                  className="w-full rounded-xl py-2 text-center text-xs font-semibold text-zinc-400 hover:text-white transition-all duration-300"
+                  className="w-full rounded-xl py-2 text-center text-xs font-semibold text-zinc-500 hover:text-zinc-900 transition-all duration-300"
                 >
                   More Info
                 </button>
