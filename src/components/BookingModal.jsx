@@ -325,5 +325,5 @@ const BookingModal = ({ isOpen, onClose, service = { title: "The Classic Cut", p
     </div>
   );
 };
-
+export default BookingModal;
 export default BookingModal;
