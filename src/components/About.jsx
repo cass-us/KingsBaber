@@ -49,7 +49,7 @@ function About() {
           </div>
 
           <h2 className="font-serif text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl lg:text-5xl">
-            Where Craftsmanship Meets Modern Luxury
+            Where Craftsmanship Meets <span className="text-amber-600">Modern Luxury</span>
           </h2>
 
           <p className="text-zinc-600 leading-relaxed text-base font-light">
@@ -102,7 +102,9 @@ function About() {
       {/* Meet the Barbers Team Section */}
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-zinc-900 tracking-tight">Meet Our Master Barbers</h2>
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900">
+            Meet Our <span className="text-amber-600">Master Barbers</span>
+          </h2>
           <p className="text-zinc-600 text-sm sm:text-base font-light">
             Our skilled team of artists brings years of dedication, precision techniques, and passion to every single chair.
           </p>
