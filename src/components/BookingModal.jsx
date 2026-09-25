@@ -48,7 +48,7 @@ const masterBarbers = [
   }
 ];
 
-const BookingModal = ({ isOpen, onClose, service = { title: "The Classic Cut", price: "$45" } }) => {
+const BookingModal = ({ isOpen, onClose, service = { title: "The Classic Cut", price: "R145" } }) => {
   const [step, setStep] = useState(1);
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
