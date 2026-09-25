@@ -60,6 +60,7 @@ const BookingModal = ({ isOpen, onClose, service = { title: "The Classic Cut", p
   const [confirmed, setConfirmed] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  // Converts the user's selected Date and Time strings into ISO format for Google Calendar
   const getEventDateTimes = () => {
     if (!selectedDate || !selectedTime) return { startISO: "", endISO: "" };
 
@@ -69,9 +70,9 @@ const BookingModal = ({ isOpen, onClose, service = { title: "The Classic Cut", p
     if (modifier === "AM" && hours === 12) hours = 0;
 
     const startDate = new Date(selectedDate);
-    startDate.setHours(hours, minutes, 0);
+    startDate.setHours(hours, minutes, 0, 0);
 
-    const endDate = new Date(startDate.getTime() + 45 * 60000);
+    const endDate = new Date(startDate.getTime() + 45 * 60000); // 45-min duration
 
     return {
       startISO: startDate.toISOString(),
@@ -149,7 +150,7 @@ const BookingModal = ({ isOpen, onClose, service = { title: "The Classic Cut", p
             <CheckCircle2 className="mx-auto h-12 w-12 text-amber-500 animate-bounce" />
             <h3 className="text-2xl font-bold text-white font-serif">Appointment Confirmed!</h3>
             <p className="text-sm text-zinc-300 max-w-sm mx-auto">
-              Thank you, <span className="font-semibold text-white">{clientName}</span>! Your session for <span className="text-amber-500">{service.title}</span> with <span className="text-white font-semibold">{selectedBarber.name}</span> on <span className="text-amber-500">{selectedDate}</span> at <span className="text-amber-500">{selectedTime}</span> has been synced to your calendar.
+              Thank you, <span className="font-semibold text-white">{clientName}</span>! Your session for <span className="text-amber-500">{service.title}</span> with <span className="text-white font-semibold">{selectedBarber.name}</span> on <span className="text-amber-500">{selectedDate}</span> at <span className="text-amber-500">{selectedTime}</span> has been successfully added to your Google Calendar.
             </p>
             <button
               onClick={handleResetAndClose}
@@ -325,5 +326,5 @@ const BookingModal = ({ isOpen, onClose, service = { title: "The Classic Cut", p
     </div>
   );
 };
-export default BookingModal;
+
 export default BookingModal;
