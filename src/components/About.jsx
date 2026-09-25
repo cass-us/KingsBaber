@@ -1,11 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Award, Scissors, Users, Sparkles, CheckCircle } from 'lucide-react';
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import React from 'react';
+import { Sparkles, CheckCircle } from 'lucide-react';
 
 const barbers = [
   {
@@ -35,56 +29,8 @@ const barbers = [
 ];
 
 function About() {
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // 1. Scroll Triggered Animation for Story and Showroom Image
-      gsap.from('.about-story-text', {
-        scrollTrigger: {
-          trigger: '.about-story-section',
-          start: 'top 80%',
-          toggleActions: 'play none none none',
-        },
-        opacity: 0,
-        x: -50,
-        duration: 1,
-        ease: 'power3.out',
-      });
-
-      gsap.from('.about-story-img', {
-        scrollTrigger: {
-          trigger: '.about-story-section',
-          start: 'top 80%',
-          toggleActions: 'play none none none',
-        },
-        opacity: 0,
-        x: 50,
-        duration: 1.2,
-        ease: 'power3.out',
-      });
-
-      // 2. Scroll Triggered Cards Reveal with a staggered spring effect
-      gsap.from('.barber-card', {
-        scrollTrigger: {
-          trigger: '.barbers-grid',
-          start: 'top 82%',
-          toggleActions: 'play none none none',
-        },
-        opacity: 0,
-        y: 60,
-        duration: 1,
-        stagger: 0.2,
-        ease: 'back.out(1.1)',
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section
-      ref={containerRef}
       id="about"
       className="bg-white text-zinc-900 min-h-screen py-24 px-6 sm:px-8 lg:px-12 relative overflow-hidden font-sans border-t border-slate-100"
     >
@@ -93,10 +39,10 @@ function About() {
       <div className="absolute bottom-1/3 right-10 w-[400px] h-[400px] bg-emerald-500/5 rounded-full filter blur-[120px] pointer-events-none" />
 
       {/* Shop Story & Interior Preview */}
-      <div className="about-story-section max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center mb-28 relative z-10">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center mb-28 relative z-10">
         
         {/* Left Story Text */}
-        <div className="about-story-text space-y-6 lg:col-span-6">
+        <div className="space-y-6 lg:col-span-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
             <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
             Our Heritage & Promise
@@ -131,7 +77,7 @@ function About() {
         </div>
 
         {/* Right Showroom Image Showcase */}
-        <div className="about-story-img rounded-3xl overflow-hidden shadow-2xl shadow-slate-200/60 border border-slate-200 relative group min-h-[420px] bg-slate-100 lg:col-span-6">
+        <div className="rounded-3xl overflow-hidden shadow-2xl shadow-slate-200/60 border border-slate-200 relative group min-h-[420px] bg-slate-100 lg:col-span-6">
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-50 z-10" />
           <img
             src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=1000&q=80"
@@ -162,11 +108,11 @@ function About() {
           </p>
         </div>
 
-        <div className="barbers-grid grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {barbers.map((barber, index) => (
             <div
               key={index}
-              className="barber-card bg-white border border-slate-200 rounded-3xl overflow-hidden hover:border-amber-400 hover:shadow-xl hover:shadow-amber-500/5 transition-all duration-300 flex flex-col group shadow-md"
+              className="bg-white border border-slate-200 rounded-3xl overflow-hidden hover:border-amber-400 hover:shadow-xl hover:shadow-amber-500/5 transition-all duration-300 flex flex-col group shadow-md"
             >
               <div className="h-80 overflow-hidden relative bg-slate-100">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-70 z-10 pointer-events-none" />
