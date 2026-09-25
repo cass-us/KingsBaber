@@ -1,48 +1,43 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { Star, Clock, MapPin, Scissors, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { Star, Clock, MapPin, Scissors, ArrowRight, Sparkles, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 
 const Hero = ({ onOpenBooking, onSelectService }) => {
   const containerRef = useRef(null);
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const shopCards = [
+    {
+      title: "Opening Hours",
+      subtitle: "Mon - Sat: 8:00 AM - 7:00 PM\nSunday: 9:00 AM - 4:00 PM",
+      icon: <Clock className="h-4 w-4 text-amber-400" />,
+      badge: "Open Today"
+    },
+    {
+      title: "Location",
+      subtitle: "124 Main Street, Suite 4B\nDowntown District",
+      icon: <MapPin className="h-4 w-4 text-amber-400" />,
+      badge: "Visit Us"
+    },
+    {
+      title: "Walk-ins Welcome",
+      subtitle: "Appointments get priority seating\nBook ahead to secure your chair",
+      icon: <Scissors className="h-4 w-4 text-amber-400" />,
+      badge: "Priority Access"
+    }
+  ];
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Staggered Entrance Timeline
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      tl.from(".gsap-badge", {
-        y: -30,
-        opacity: 0,
-        duration: 0.8,
-      })
-      .from(".gsap-title", {
-        y: 40,
-        opacity: 0,
-        duration: 1,
-      }, "-=0.4")
-      .from(".gsap-desc", {
-        y: 25,
-        opacity: 0,
-        duration: 0.8,
-      }, "-=0.6")
-      .from(".gsap-buttons", {
-        y: 20,
-        opacity: 0,
-        duration: 0.8,
-      }, "-=0.5")
-      .from(".gsap-stats", {
-        scale: 0.9,
-        opacity: 0,
-        duration: 0.9,
-      }, "-=0.6")
-      .from(".gsap-card", {
-        x: 50,
-        opacity: 0,
-        duration: 1.1,
-        ease: "power4.out",
-      }, "-=0.8");
+      tl.from(".gsap-badge", { y: -30, opacity: 0, duration: 0.8 })
+        .from(".gsap-title", { y: 40, opacity: 0, duration: 1 }, "-=0.4")
+        .from(".gsap-desc", { y: 25, opacity: 0, duration: 0.8 }, "-=0.6")
+        .from(".gsap-buttons", { y: 20, opacity: 0, duration: 0.8 }, "-=0.5")
+        .from(".gsap-stats", { scale: 0.9, opacity: 0, duration: 0.9 }, "-=0.6")
+        .from(".gsap-card", { x: 50, opacity: 0, duration: 1.1, ease: "power4.out" }, "-=0.8");
 
-      // 2. Continuous Subtle Floating Animation for the Glass Card
       gsap.to(".gsap-card", {
         y: -10,
         duration: 4,
@@ -50,7 +45,6 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
         yoyo: true,
         ease: "sine.inOut",
       });
-
     }, containerRef);
 
     return () => ctx.revert();
@@ -65,6 +59,14 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
     }
   };
 
+  const nextSlide = () => {
+    setActiveSlide((prev) => (prev === shopCards.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setActiveSlide((prev) => (prev === 0 ? shopCards.length - 1 : prev - 1));
+  };
+
   return (
     <section ref={containerRef} className="relative isolate min-h-screen overflow-hidden bg-zinc-950 px-6 py-20 sm:px-8 lg:px-12">
       {/* Background Image & Cinematic Dark Overlays */}
@@ -75,12 +77,10 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
           className="h-full w-full object-cover scale-105 animate-pulse duration-[10000ms]"
         />
 
-        {/* Deep Dark Vignettes & Gradients */}
-        <div className="absolute inset-0 bg-zinc-950/75" />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-zinc-950/40" />
+        <div className="absolute inset-0 bg-zinc-950/80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/85 to-zinc-950/40" />
         <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/95 via-zinc-950/60 to-zinc-950/40" />
 
-        {/* Subtle Ambient Glows */}
         <div className="absolute top-1/3 left-1/4 -z-10 h-96 w-96 rounded-full bg-amber-500/10 blur-[140px] pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 -z-10 h-96 w-96 rounded-full bg-emerald-500/10 blur-[140px] pointer-events-none" />
       </div>
@@ -93,12 +93,12 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
           <div className="space-y-6 text-center md:col-span-8 md:text-left">
 
             {/* Badge */}
-            <div className="gsap-badge inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400 backdrop-blur-md sm:text-xs">
+            <div className="gsap-badge inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400 backdrop-blur-md">
               <Sparkles className="h-3.5 w-3.5 animate-pulse text-emerald-400" />
               Premier Grooming Experience
             </div>
 
-            {/* Typography Heavy Heading */}
+            {/* Heading */}
             <h1 className="gsap-title font-serif text-4xl font-light tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl">
               Precision Cuts.
               <br />
@@ -116,12 +116,12 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
               . Where classic barbering techniques meet modern luxury. Experience top-tier fades, beard sculpts, and premium hot towel treatments.
             </p>
 
-            {/* Call-to-action Buttons */}
+            {/* Buttons */}
             <div className="gsap-buttons flex flex-col items-center justify-center gap-3.5 pt-2 sm:flex-row md:justify-start">
               <button
                 type="button"
                 onClick={handleBookNow}
-                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-5 py-2.5 text-xs font-bold tracking-wide text-zinc-950 shadow-xl shadow-amber-500/20 transition-all duration-300 hover:bg-amber-400 hover:scale-[1.02] sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-7 lg:py-3.5 lg:text-sm"
+                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-5 py-3 text-xs font-bold tracking-wide text-zinc-950 shadow-xl shadow-amber-500/20 transition-all duration-300 hover:bg-amber-400 hover:scale-[1.02] sm:w-auto lg:px-7 lg:py-3.5 lg:text-sm"
               >
                 <span>Book Appointment</span>
                 <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1 lg:h-4 lg:w-4" />
@@ -129,11 +129,60 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
 
               <a
                 href="#services"
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700/80 bg-zinc-900/60 px-5 py-2.5 text-center text-xs font-medium tracking-wide text-zinc-200 backdrop-blur-md transition-all duration-300 hover:border-zinc-500 hover:bg-zinc-800/80 sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-7 lg:py-3.5 lg:text-sm"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700/80 bg-zinc-900/60 px-5 py-3 text-center text-xs font-medium tracking-wide text-zinc-200 backdrop-blur-md transition-all duration-300 hover:border-zinc-500 hover:bg-zinc-800/80 sm:w-auto lg:px-7 lg:py-3.5 lg:text-sm"
               >
                 <Scissors className="h-3.5 w-3.5 text-zinc-400 lg:h-4 lg:w-4" />
                 <span>Explore Services</span>
               </a>
+            </div>
+
+            {/* Mobile Carousel UI (Visible only on small screens) */}
+            <div className="block md:hidden mt-8 pt-4">
+              <div className="relative rounded-2xl border border-zinc-800 bg-zinc-900/90 p-5 shadow-xl backdrop-blur-md">
+                <div className="flex items-center justify-between border-b border-zinc-800 pb-3 mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950">
+                      {shopCards[activeSlide].icon}
+                    </div>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+                      {shopCards[activeSlide].title}
+                    </h3>
+                  </div>
+                  <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400">
+                    {shopCards[activeSlide].badge}
+                  </span>
+                </div>
+
+                <p className="text-xs text-zinc-300 whitespace-pre-line py-2">
+                  {shopCards[activeSlide].subtitle}
+                </p>
+
+                {/* Carousel Controls */}
+                <div className="flex items-center justify-between mt-4 pt-3 border-t border-zinc-800">
+                  <button 
+                    onClick={prevSlide}
+                    className="flex items-center gap-1 text-[11px] font-semibold text-zinc-400 hover:text-white p-1 rounded-lg bg-zinc-950 border border-zinc-800"
+                  >
+                    <ChevronLeft className="h-4 w-4" /> Prev
+                  </button>
+
+                  <div className="flex gap-1.5">
+                    {shopCards.map((_, idx) => (
+                      <span 
+                        key={idx} 
+                        className={`h-1.5 rounded-full transition-all ${activeSlide === idx ? "w-4 bg-amber-500" : "w-1.5 bg-zinc-700"}`} 
+                      />
+                    ))}
+                  </div>
+
+                  <button 
+                    onClick={nextSlide}
+                    className="flex items-center gap-1 text-[11px] font-semibold text-zinc-400 hover:text-white p-1 rounded-lg bg-zinc-950 border border-zinc-800"
+                  >
+                    Next <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* Interactive Stats */}
@@ -167,11 +216,11 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
             </div>
           </div>
 
-          {/* Right Column: Dark Glassmorphic Shop Details Card */}
+          {/* Right Column: Desktop Shop Details Card */}
           <div className="hidden md:col-span-4 md:block">
-            <div className="gsap-card rounded-2xl border border-zinc-800/90 bg-zinc-950/85 p-6 shadow-2xl shadow-black/80 backdrop-blur-xl">
+            <div className="gsap-card rounded-2xl border border-zinc-800 bg-zinc-900/90 p-6 shadow-2xl shadow-black/80 backdrop-blur-xl">
 
-              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
+              <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-200">
                   Shop Details
                 </h3>
@@ -185,53 +234,34 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
               <div className="space-y-5 py-5 text-xs sm:text-sm">
 
                 <div className="flex items-start gap-3.5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-300 shadow-inner">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950 text-zinc-300 shadow-inner">
                     <Clock className="h-4 w-4 text-amber-400" />
                   </div>
-
                   <div>
-                    <p className="font-semibold text-white">
-                      Opening Hours
-                    </p>
-                    <p className="mt-0.5 text-zinc-400">
-                      Mon - Sat: 8:00 AM - 7:00 PM
-                    </p>
-                    <p className="text-zinc-400">
-                      Sunday: 9:00 AM - 4:00 PM
-                    </p>
+                    <p className="font-semibold text-white">Opening Hours</p>
+                    <p className="mt-0.5 text-zinc-400">Mon - Sat: 8:00 AM - 7:00 PM</p>
+                    <p className="text-zinc-400">Sunday: 9:00 AM - 4:00 PM</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3.5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-300 shadow-inner">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950 text-zinc-300 shadow-inner">
                     <MapPin className="h-4 w-4 text-amber-400" />
                   </div>
-
                   <div>
-                    <p className="font-semibold text-white">
-                      Location
-                    </p>
-                    <p className="mt-0.5 text-zinc-400">
-                      124 Main Street, Suite 4B
-                    </p>
-                    <p className="text-zinc-400">
-                      Downtown District
-                    </p>
+                    <p className="font-semibold text-white">Location</p>
+                    <p className="mt-0.5 text-zinc-400">124 Main Street, Suite 4B</p>
+                    <p className="text-zinc-400">Downtown District</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3.5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-300 shadow-inner">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950 text-zinc-300 shadow-inner">
                     <Scissors className="h-4 w-4 text-amber-400" />
                   </div>
-
                   <div>
-                    <p className="font-semibold text-white">
-                      Walk-ins Welcome
-                    </p>
-                    <p className="mt-0.5 text-zinc-400">
-                      Appointments get priority seating
-                    </p>
+                    <p className="font-semibold text-white">Walk-ins Welcome</p>
+                    <p className="mt-0.5 text-zinc-400">Appointments get priority seating</p>
                   </div>
                 </div>
 
@@ -240,7 +270,7 @@ const Hero = ({ onOpenBooking, onSelectService }) => {
               <button
                 type="button"
                 onClick={handleBookNow}
-                className="w-full rounded-xl bg-emerald-500 py-2.5 text-xs font-bold uppercase tracking-wider text-zinc-950 transition-all duration-300 hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20 lg:py-3.5"
+                className="w-full rounded-xl bg-amber-500 py-3 text-xs font-bold uppercase tracking-wider text-zinc-950 transition-all duration-300 hover:bg-amber-400 hover:shadow-lg hover:shadow-amber-500/20"
               >
                 Reserve Your Chair
               </button>
