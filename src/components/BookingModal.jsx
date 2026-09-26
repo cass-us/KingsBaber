@@ -1,330 +1,124 @@
-import React, { useState } from "react";
-import { useGoogleLogin } from "@react-oauth/google";
-import { Calendar, Clock, CheckCircle2, X, Sparkles, AlertCircle, User, Mail, Phone, Scissors, ArrowRight, ArrowLeft } from "lucide-react";
+import React from 'react';
 
-// Dynamically generates time slots based on opening/closing hours and duration
-const generateTimeSlots = (openHour = 9, closeHour = 17, intervalMinutes = 45) => {
-  const slots = [];
-  let currentMinutes = openHour * 60;
-  const endMinutes = closeHour * 60;
-
-  while (currentMinutes + intervalMinutes <= endMinutes) {
-    const hours24 = Math.floor(currentMinutes / 60);
-    const minutes = currentMinutes % 60;
-    
-    const modifier = hours24 >= 12 ? "PM" : "AM";
-    let hours12 = hours24 % 12;
-    hours12 = hours12 ? hours12 : 12;
-    
-    const formattedHours = hours12 < 10 ? `0${hours12}` : hours12;
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-    slots.push(`${formattedHours}:${formattedMinutes} ${modifier}`);
-
-    currentMinutes += intervalMinutes;
-  }
-  return slots;
-};
-
-const timeSlots = generateTimeSlots(9, 17, 45);
-
-const masterBarbers = [
-  { 
-    id: "marcus", 
-    name: "Marcus Vance", 
-    role: "Master Fade Specialist",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80"
+const barbers = [
+  {
+    name: 'Marcus "The Razor" Vance',
+    role: 'Master Barber & Founder',
+    experience: '12+ Years Experience',
+    specialty: 'Precision Fades & Hot Towel Shaves',
+    image: 'image_agent_tag_4898397653752859994',
+    bio: 'Crafting sharp looks and timeless cuts since day one. Dedicated to perfection with every blade stroke.',
   },
-  { 
-    id: "elena", 
-    name: "Elena Rostova", 
-    role: "Beard & Hot Towel Expert",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80"
+  {
+    name: 'Elena Rostova',
+    role: 'Senior Hair Stylist',
+    experience: '8 Years Experience',
+    specialty: 'Modern Texturized Cuts & Beard Sculpting',
+    image: 'image_agent_tag_4898397653752856809',
+    bio: 'Combining modern styling trends with classic barbering techniques for effortless everyday looks.',
   },
-  { 
-    id: "david", 
-    name: "David 'Blade' King", 
-    role: "Classic & Modern Stylist",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80"
-  }
+  {
+    name: 'David "D-Cut" Miller',
+    role: 'Beard & Detail Specialist',
+    experience: '6 Years Experience',
+    specialty: 'Beard Grooming, Line-ups & Hair Art',
+    image: 'image_agent_tag_4898397653752857720',
+    bio: 'Specializing in intricate lineup detailing and custom beard care to elevate your personal style.',
+  },
 ];
 
-const BookingModal = ({ isOpen, onClose, service = { title: "The Classic Cut", price: "R145" } }) => {
-  const [step, setStep] = useState(1);
-  const [clientName, setClientName] = useState("");
-  const [clientEmail, setClientEmail] = useState("");
-  const [clientPhone, setClientPhone] = useState("");
-  const [selectedBarber, setSelectedBarber] = useState(masterBarbers[0]);
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  // Converts the user's selected Date and Time strings into ISO format for Google Calendar
-  const getEventDateTimes = () => {
-    if (!selectedDate || !selectedTime) return { startISO: "", endISO: "" };
-
-    const [timeStr, modifier] = selectedTime.split(" ");
-    let [hours, minutes] = timeStr.split(":").map(Number);
-    if (modifier === "PM" && hours < 12) hours += 12;
-    if (modifier === "AM" && hours === 12) hours = 0;
-
-    const startDate = new Date(selectedDate);
-    startDate.setHours(hours, minutes, 0, 0);
-
-    const endDate = new Date(startDate.getTime() + 45 * 60000); // 45-min duration
-
-    return {
-      startISO: startDate.toISOString(),
-      endISO: endDate.toISOString(),
-    };
-  };
-
-  const login = useGoogleLogin({
-    scope: "https://www.googleapis.com/auth/calendar.events",
-    onSuccess: async (tokenResponse) => {
-      setLoading(true);
-      setErrorMsg("");
-
-      const { startISO, endISO } = getEventDateTimes();
-
-      try {
-        const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${tokenResponse.access_token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            summary: `Kings Barber: ${service.title} with ${selectedBarber.name}`,
-            location: "124 Main Street, Suite 4B, Downtown District",
-            description: `Client: ${clientName} (${clientEmail}, ${clientPhone})\nBarber: ${selectedBarber.name}\nService: ${service.title} (${service.price})`,
-            start: { dateTime: startISO },
-            end: { dateTime: endISO },
-            attendees: clientEmail ? [{ email: clientEmail }] : [],
-          }),
-        });
-
-        if (response.ok) {
-          setConfirmed(true);
-        } else {
-          const errData = await response.json();
-          setErrorMsg(errData.error?.message || "Failed to add event to calendar.");
-        }
-      } catch (err) {
-        setErrorMsg("Network error connecting to Google Calendar.");
-      } finally {
-        setLoading(false);
-      }
-    },
-    onError: () => setErrorMsg("Google Authentication was canceled or failed."),
-  });
-
-  if (!isOpen) return null;
-
-  const handleResetAndClose = () => {
-    setStep(1);
-    setConfirmed(false);
-    setClientName("");
-    setClientEmail("");
-    setClientPhone("");
-    setSelectedDate("");
-    setSelectedTime("");
-    setErrorMsg("");
-    onClose();
-  };
-
+export default function About() {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 p-4 backdrop-blur-md">
-      <div className="relative w-full max-w-lg rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl">
-        
-        <button
-          onClick={handleResetAndClose}
-          className="absolute right-4 top-4 rounded-xl p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors"
-        >
-          <X className="h-5 w-5" />
-        </button>
+    <div className="bg-slate-950 text-slate-100 min-h-screen py-16 px-4 sm:px-6 lg:px-8">
+      {/* Hero Header */}
+      <div className="max-w-4xl mx-auto text-center mb-16">
+        <h2 className="text-amber-500 text-sm font-semibold tracking-widest uppercase mb-2">
+          Welcome to KingsBaber
+        </h2>
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-6">
+          Where Craftsmanship Meets Comfort
+        </h1>
+        <p className="text-slate-400 text-lg leading-relaxed">
+          More than just a haircut—KingsBaber is a sanctuary for refinement, precision, and community. We preserve traditional barbering traditions while embracing modern grooming aesthetic standards.
+        </p>
+      </div>
 
-        {confirmed ? (
-          <div className="py-8 text-center space-y-4">
-            <CheckCircle2 className="mx-auto h-12 w-12 text-amber-500 animate-bounce" />
-            <h3 className="text-2xl font-bold text-white font-serif">Appointment Confirmed!</h3>
-            <p className="text-sm text-zinc-300 max-w-sm mx-auto">
-              Thank you, <span className="font-semibold text-white">{clientName}</span>! Your session for <span className="text-amber-500">{service.title}</span> with <span className="text-white font-semibold">{selectedBarber.name}</span> on <span className="text-amber-500">{selectedDate}</span> at <span className="text-amber-500">{selectedTime}</span> has been successfully added to your Google Calendar.
-            </p>
-            <button
-              onClick={handleResetAndClose}
-              className="mt-4 w-full rounded-xl bg-amber-500 py-3 text-xs font-bold uppercase tracking-wider text-zinc-950 hover:bg-amber-400 transition-all"
-            >
-              Done
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-6">
+      {/* Shop Story & Interior Preview */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
+        <div className="space-y-6">
+          <h3 className="text-2xl font-bold text-white">Our Heritage & Promise</h3>
+          <p className="text-slate-300 leading-relaxed">
+            Founded with a passion for uncompromised grooming quality, KingsBaber delivers tailored cuts and premium beard care in a relaxed, classic barbershop setting.
+          </p>
+          <p className="text-slate-400 leading-relaxed">
+            Every appointment begins with a detailed consultation to understand your hair texture, head shape, and personal routine, ensuring you walk out looking and feeling confident.
+          </p>
+          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800 text-center">
             <div>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/15 px-3 py-1 text-xs font-medium text-amber-400">
-                <Sparkles className="h-3.5 w-3.5" />
-                Kings Barber Reservation (Step {step} of 2)
-              </div>
-              <h2 className="mt-2 text-xl font-bold text-white font-serif">
-                {step === 1 ? "Client Details & Barber" : "Select Date & Time"}
-              </h2>
-              <p className="text-xs text-zinc-400">
-                {service.title} — <span className="text-amber-500 font-semibold">{service.price}</span>
-              </p>
+              <p className="text-3xl font-bold text-amber-500">10k+</p>
+              <p className="text-xs text-slate-400 uppercase tracking-wider mt-1">Cuts Delivered</p>
             </div>
-
-            {errorMsg && (
-              <div className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-400">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>{errorMsg}</span>
-              </div>
-            )}
-
-            {step === 1 ? (
-              <div className="space-y-4">
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                    <User className="h-3.5 w-3.5 text-amber-500" /> Full Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="John Doe"
-                    value={clientName}
-                    onChange={(e) => setClientName(e.target.value)}
-                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2.5 text-sm text-white focus:border-amber-500 focus:outline-none"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                    <Mail className="h-3.5 w-3.5 text-amber-500" /> Email Address
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    placeholder="john@example.com"
-                    value={clientEmail}
-                    onChange={(e) => setClientEmail(e.target.value)}
-                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2.5 text-sm text-white focus:border-amber-500 focus:outline-none"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                    <Phone className="h-3.5 w-3.5 text-amber-500" /> Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="+27 82 123 4567"
-                    value={clientPhone}
-                    onChange={(e) => setClientPhone(e.target.value)}
-                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2.5 text-sm text-white focus:border-amber-500 focus:outline-none"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                    <Scissors className="h-3.5 w-3.5 text-amber-500" /> Choose Barber
-                  </label>
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                    {masterBarbers.map((barber) => (
-                      <button
-                        key={barber.id}
-                        type="button"
-                        onClick={() => setSelectedBarber(barber)}
-                        className={`flex flex-col items-center text-center rounded-2xl border p-3 transition-all ${
-                          selectedBarber.id === barber.id
-                            ? "border-amber-500 bg-amber-500/15 text-white shadow-lg shadow-amber-500/10"
-                            : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200"
-                        }`}
-                      >
-                        <img 
-                          src={barber.image} 
-                          alt={barber.name} 
-                          className="w-12 h-12 rounded-full object-cover mb-2 border border-zinc-700" 
-                        />
-                        <p className="text-xs font-bold text-white line-clamp-1">{barber.name}</p>
-                        <p className="text-[10px] text-zinc-400 mt-0.5 line-clamp-1">{barber.role}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  disabled={!clientName || !clientEmail || !clientPhone}
-                  onClick={() => setStep(2)}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 py-3.5 text-xs font-bold uppercase tracking-wider text-zinc-950 transition-all hover:bg-amber-400 disabled:opacity-40 disabled:hover:bg-amber-500 mt-2"
-                >
-                  <span>Next: Choose Date & Time</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                    <Calendar className="h-3.5 w-3.5 text-amber-500" /> Choose Date
-                  </label>
-                  <input
-                    type="date"
-                    required
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-white focus:border-amber-500 focus:outline-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                    <Clock className="h-3.5 w-3.5 text-amber-500" /> Available Slots with {selectedBarber.name}
-                  </label>
-                  <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 max-h-48 overflow-y-auto pr-1">
-                    {timeSlots.map((slot) => (
-                      <button
-                        key={slot}
-                        type="button"
-                        onClick={() => setSelectedTime(slot)}
-                        className={`rounded-xl border px-3 py-2 text-xs font-semibold transition-all ${
-                          selectedTime === slot
-                            ? "border-amber-500 bg-amber-500/20 text-amber-400 shadow-lg shadow-amber-500/10"
-                            : "border-zinc-800 bg-zinc-950 text-zinc-300 hover:border-zinc-700 hover:bg-zinc-800/80"
-                        }`}
-                      >
-                        {slot}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setStep(1)}
-                    className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3.5 text-xs font-bold uppercase tracking-wider text-zinc-300 hover:bg-zinc-800"
-                  >
-                    <ArrowLeft className="h-4 w-4" /> Back
-                  </button>
-
-                  <button
-                    type="button"
-                    disabled={!selectedDate || !selectedTime || loading}
-                    onClick={() => login()}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-amber-500 py-3.5 text-xs font-bold uppercase tracking-wider text-zinc-950 transition-all hover:bg-amber-400 disabled:opacity-40 disabled:hover:bg-amber-500"
-                  >
-                    {loading ? "Syncing Calendar..." : "Confirm & Sync to Google Calendar"}
-                  </button>
-                </div>
-              </div>
-            )}
+            <div>
+              <p className="text-3xl font-bold text-amber-500">15+</p>
+              <p className="text-xs text-slate-400 uppercase tracking-wider mt-1">Awards Won</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-amber-500">4.9★</p>
+              <p className="text-xs text-slate-400 uppercase tracking-wider mt-1">Client Rating</p>
+            </div>
           </div>
-        )}
+        </div>
+
+        <div className="rounded-xl overflow-hidden shadow-2xl border border-slate-800">
+          <img
+            src="image_agent_tag_4898397653752858631"
+            alt="KingsBaber Shop Interior"
+            className="w-full h-80 sm:h-96 object-cover"
+          />
+        </div>
+      </div>
+
+      {/* Meet the Barbers Team Section */}
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-white mb-3">Meet Our Master Barbers</h2>
+          <p className="text-slate-400 max-w-xl mx-auto">
+            Our skilled team of artists brings years of dedication, precision techniques, and passion to every chair.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {barbers.map((barber, index) => (
+            <div
+              key={index}
+              className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-amber-500/50 transition duration-300 flex flex-col"
+            >
+              <div className="h-64 overflow-hidden relative">
+                <img
+                  src={barber.image}
+                  alt={barber.name}
+                  className="w-full h-full object-cover object-top hover:scale-105 transition duration-500"
+                />
+                <span className="absolute bottom-3 left-3 bg-amber-500 text-slate-950 text-xs font-bold px-2.5 py-1 rounded">
+                  {barber.experience}
+                </span>
+              </div>
+              <div className="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-white">{barber.name}</h3>
+                  <p className="text-amber-500 text-sm font-medium mb-3">{barber.role}</p>
+                  <p className="text-slate-300 text-sm leading-relaxed mb-4">{barber.bio}</p>
+                </div>
+                <div className="pt-4 border-t border-slate-800 text-xs text-slate-400">
+                  <span className="font-semibold text-slate-300">Specialty: </span>
+                  {barber.specialty}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
-};
-
-export default BookingModal;
+}
+export defaultBookingModal;
